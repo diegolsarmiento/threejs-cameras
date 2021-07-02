@@ -1,5 +1,6 @@
 import './style.css';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 // Cursor
 const cursor = {
@@ -42,6 +43,13 @@ scene.add(mesh);
 // Parameters are POV, Aspect Ratio, NEAR, FAR
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
 
+// ORBIT Controls (replace Custom Controls)
+// Allows zoom in/out, slide and more!
+const controls = new OrbitControls(camera, canvas);
+// Enables Dambping: CIRCULAR ROTATION
+controls.enableDamping = true;
+controls.target.y = 2;
+
 // Ortographic Camera
 // Parameters are LEFT, RIGHT, TOP, BOTTOM, NEAR, FAR
 //const aspectRadio = sizes.width / sizes.height;
@@ -77,10 +85,26 @@ const tick = () =>
     */
 
     // Update camera
+    /*
+    // Isolated because of next point: Place things on a circle. To do a full rotation
     camera.position.x = cursor.x * 5
     camera.position.y = cursor.y * 5
-    // Look at the camera regardless of the camera position
+    // "Look at the camera" regardless of the camera position: Adjusts/Moves dependending on take
     camera.lookAt(mesh.position)
+    */
+
+    // Sin and Cos because we want to place things on a circle. To do a full rotation
+    /*
+    // Isolated because of the use of Custom Controls
+    camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 2
+    camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 2
+    camera.position.y = cursor.y * 3
+    camera.lookAt(mesh.position)
+    */
+
+    // Update controls
+    controls.update()
+
 
     // Render
     renderer.render(scene, camera);
